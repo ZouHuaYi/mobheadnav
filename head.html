@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<style>
+header{width: 100%;height: 1.13rem;background: url("../line_03.png")no-repeat center bottom;}
+header>img{width: 4.9rem;height: .64rem;margin-left: .3rem;padding-top: .24rem;}
+header>a.script{position: absolute;width: .55rem;height: .50rem;right: .3rem;top: .35rem;background-position: -1.04rem -.08rem;}
+header>a>img{width: 100%;height: 100%;}
+.g-mak{position: fixed;top:0;left: 0;width: 100%;height: 100%;z-index: 999;background: rgba(0,0,0,0);transform: translateX(80%);display: none;transition: .5s;}
+.n-mak{width: 20%;height: 100%;float: left;}
+.m-hidden{width: 80%;background: #FFFFFF;height: 100%;float:left;overflow: hidden;}
+.m-hidden>ul{width: 100%;height: 100%;position: relative;transition: all .5s;}
+.m-hidden>ul>li{width: 100%;text-indent: .3rem;height: .8rem;line-height: .8rem;font-size: .30rem;border-bottom: .01rem solid #C4C4C4;}
+.m-hidden>ul>li:nth-of-type(1){text-align: center;text-indent: 0;}
+.m-hidden>ul>li a{display: block;width: 100%;height: 100%;color: #666;}
+.sec-nav{position: absolute;width: 100%;height: 100%;background: #FFFFFF;top: 0;left: 100%;display: none;}
+.sec-nav li:nth-of-type(1){text-align: center;text-indent: 0;}
+.g-jleft{background: url(../left.png)no-repeat .3rem center;background-size: .3rem .3rem;}
+.g-jright{background: url(../right.png)no-repeat 90% center;background-size: .3rem .3rem;}
+		</style>
+	</head>
+	<body>
+		 <header>
+        <img src="images/logo.png">
+        <a class="script" id="navBtn" href="javascript:void (0);"></a>
+         <div class="g-mak" id="navMak">
+         	<div class="n-mak" id="mBtn"></div>
+         	<div class="m-hidden" id="mHidden">
+		        <ul>
+		        	<li><a href="javascript:;">广州番禺区青年企业家协会</a></li>
+		            <li><a href="javascript:;">首页</a></li>
+		            <li><a href="javascript:;">二首页</a></li>
+		            <li class="g-jright"><a href="javascript:;">三首页</a>
+		            	<ul class="sec-nav">
+		               		<li class="g-jleft"><a href="javascript:;">二1级头部首页</a></li>
+		                    <li><a href="javascript:;">三首页</a></li>
+		                    <li><a href="javascript:;">三首页</a></li>
+		                </ul>
+		            </li>
+		            <li class="g-jright"><a href="javascript:;">三首页</a>
+	            	
+		               <ul class="sec-nav">
+		               		<li class="g-jleft"><a href="javascript:;">二级头部首页</a></li>
+		                    <li><a href="javascript:;">三首页</a></li>
+		                    <li><a href="javascript:;">三首页</a></li>
+		                </ul>
+		                
+		            </li>
+		            <li><a href="javascript:;">三首页</a></li>
+		        </ul>
+	        </div>
+       </div>
+    </header>
+	</body>
+	<script>
+		/**
+ * Created by Administrator on 2017/7/21.
+ */
+
+(function(doc, win){
+    var docE1 = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function(){
+            var clientWidth = docE1.clientWidth;
+            if(!clientWidth) return;
+            if(clientWidth<=640){docE1.style.fontSize = 100*(clientWidth/640) + 'px';}
+            else{docE1.style.fontSize = 100 + 'px'}
+        };
+    if (!doc.addEventListener) return;
+    win.addEventListener(resizeEvt,recalc,false);
+    doc.addEventListener('DOMContentLoaded',recalc,false);
+})(document,window);
+
+
+function id(obj) {
+    return document.querySelector('#'+obj);
+}
+//事件绑定
+function bind(obj, ev, fn) { 
+    if (obj.addEventListener) {
+        obj.addEventListener(ev, fn, false);
+    } else {
+        obj.attachEvent('on' + ev, function() {
+            fn.call(obj);
+        });
+    }
+}
+
+function unbind(obj,ev,fn){
+	if (obj.removeEventListener){
+		obj.removeEventListener(ev,fn,false);
+	} else {
+		obj.detachEvent("on" + ev,fn)
+	}
+}
+//手机屏幕的宽高
+function view() {
+    return {
+        w: document.documentElement.clientWidth,
+        h: document.documentElement.clientHeight
+    };
+}
+//添加class类名
+function addClass(obj, sClass) { 
+    var aClass = obj.className.split(' '); 
+    if (!obj.className) {
+        obj.className = sClass;
+        return;
+    }
+    for (var i = 0; i < aClass.length; i++) {
+        if (aClass[i] === sClass) return;
+    }
+    obj.className += ' ' + sClass;
+}
+//去除class类名
+function removeClass(obj, sClass) { 
+    var aClass = obj.className.split(' ');
+    if (!obj.className) return;
+    for (var i = 0; i < aClass.length; i++) {
+        if (aClass[i] === sClass) {
+            aClass.splice(i, 1);
+            obj.className = aClass.join(' ');
+            break;
+        }
+    }
+}
+//头部导航的效果
+bind(document,'DOMContentLoaded',function(){
+	var nav=id("navBtn"),
+	doc=document.documentElement,
+	mak=id("navMak"),
+	btnback=id("mBtn"),
+	mid=id("mHidden"),
+	oUls=null,
+	mul=mid.getElementsByTagName("ul")[0];
+var preHandler = function(e){e.preventDefault();}
+	//点击出现的
+	bind(nav,"touchstart",function(){
+		doc.style.transform=doc.style.webkitTransform="translateX(-80%) translateZ(0px)";
+		mak.style.display="block";
+		//绑定滚动事件
+		bind(document,"touchmove",preHandler)
+		setTimeout(function(){
+			mak.style.background="rgba(0,0,0,.5)";
+		},500)
+	})	
+	//事件委托到msk
+	bind(mak,"touchstart",function(evrnt){
+		var ele=event.target;
+		if(ele.nodeName=="A"){
+			var oUl=ele.parentNode.children[1];
+			oUls=oUl;
+			if(oUl){
+				oUl.style.display="block";
+				mul.style.transform=mul.style.webkitTransform="translateX(-100%) translateZ(0px)";
+				var aback=oUl.getElementsByTagName("li")[0];
+				bind(aback,"touchend",function(){
+					mul.style.transform="translateX(0)";
+					setTimeout(function(){
+						oUl.style.display="none";
+					},500)			
+				})
+			}
+		}
+	})
+	//点击收回
+	bind(btnback,"touchend",function(ev){
+		doc.style.transform=doc.style.webkitTransform="translateX(0) translateZ(0px)";
+		mak.style.display="none";
+		mak.style.background="rgba(0,0,0,0)";		
+		unbind(document,"touchmove",preHandler);
+		if(oUls){
+			mul.style.transform=mul.style.webkitTransform="translateX(0) translateZ(0px)";
+			setTimeout(function(){
+			oUls.style.display="none";
+		},500)		
+		}
+		
+	})
+	
+	
+})
+
+/*
+ *主要的思路是父级的移动来达到对应的目的 
+ * */
+
+
+	</script>
+</html>
+		
